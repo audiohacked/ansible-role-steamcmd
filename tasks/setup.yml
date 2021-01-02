@@ -1,5 +1,4 @@
 ---
-
 - name: create directory for SteamCMD app
   file:
     path: "{{ steamcmd_directory }}"
@@ -20,18 +19,18 @@
 - name: download SteamCMD for Linux
   get_url:
     url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-    dest: "{{ steamcmd_directory }}steamcmd_linux.tar.gz"
+    dest: "{{ steamcmd_directory }}/steamcmd_linux.tar.gz"
   when: stat_steamcmd_result.stat.exists == False
 
 - name: extract the contents to cmd directory
   unarchive:
-    src: "{{ steamcmd_directory }}steamcmd_linux.tar.gz"
+    src: "{{ steamcmd_directory }}/steamcmd_linux.tar.gz"
     dest: "{{ steamcmd_directory }}"
     copy: no
   when: stat_steamcmd_result.stat.exists == False
 
 - name: attempt to log into steam anonymously
-  command: "{{ steamcmd_directory }}steamcmd.sh +quit"
+  command: "{{ steamcmd_directory }}/steamcmd.sh +quit"
   async: "{{ steamcmd_login_timeout}}"
   poll: 5
   register: output
@@ -44,7 +43,7 @@
   when: output is not skipped
 
 - name: attempt to log into steam
-  command: "{{ steamcmd_directory }}steamcmd.sh +login {{ steamcmd_steam.username }} {{ steamcmd_steam.password }} +quit"
+  command: "{{ steamcmd_directory }}/steamcmd.sh +login {{ steamcmd_steam.username }} {{ steamcmd_steam.password }} +quit"
   async: "{{ steamcmd_login_timeout}}"
   poll: 5
   register: output
@@ -58,7 +57,7 @@
   when: output is not skipped
 
 - name: attempt to log into steam w/guard code
-  command: "{{ steamcmd_directory }}steamcmd.sh +set_steam_guard_code {{steamcmd_steam.guard}} +login {{ steamcmd_steam.username }} {{ steamcmd_steam.password }} +quit"
+  command: "{{ steamcmd_directory }}/steamcmd.sh +set_steam_guard_code {{steamcmd_steam.guard}} +login {{ steamcmd_steam.username }} {{ steamcmd_steam.password }} +quit"
   async: "{{ steamcmd_login_timeout}}"
   poll: 5
   register: output
@@ -73,8 +72,8 @@
 
 - name: linking steamclient.so to the ~/.steam/sdk32/steamclient.so directory
   file:
-    src: "{{ steamcmd_directory }}linux32/steamclient.so"
-    dest: "{{ steamcmd_user_home }}.steam/sdk32/steamclient.so"
+    src: "{{ steamcmd_directory }}/linux32/steamclient.so"
+    dest: "{{ steamcmd_user_home }}/.steam/sdk32/steamclient.so"
     state: link
     creates: yes
   when: steam_stdout.find('unable to locate a running instance of Steam, or a local steamclient.dll') != -1

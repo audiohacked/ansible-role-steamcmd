@@ -1,5 +1,4 @@
 ---
-
 steamcmd_packages:
   - glibc.i686
   - libgcc.i686
