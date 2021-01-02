@@ -7,7 +7,7 @@
 
 - name: create legacy directory for older apps
   file:
-    path: "{{ steamcmd_user_home }}.steam/sdk32/"
+    path: "{{ steamcmd_user_home }}/.steam/sdk32/"
     state: directory
     recurse: yes
 
